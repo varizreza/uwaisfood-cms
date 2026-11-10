@@ -266,7 +266,7 @@ function cms_getDraft(token) {
   content = uwaisCmsNormalizeContent_(content);
   return {
     content: content,
-    products: uwaisCmsCatalog_(content),
+    products: uwaisCmsCatalog_(content, true),
     publishedAt: uwaisCmsRead_('PUBLISHED_META', {})
   };
 }
