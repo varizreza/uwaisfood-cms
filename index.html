@@ -1,1 +1,121 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#000"><title>Uwais Food CMS</title><link rel="stylesheet" href="assets/cms.css"></head><body><section id="login" class="login"><div class="mark">U<span>F</span></div><small>CONTENT MANAGEMENT SYSTEM</small><h1>Uwais Food <em>CMS</em></h1><p>Kelola konten website Uwais Food.</p><label>URL Web App Apps Script</label><input id="api" placeholder="https://script.google.com/macros/s/.../exec"><label>PIN Admin</label><input id="pin" type="password" placeholder="PIN admin"><button id="loginBtn">Masuk ke CMS</button><p id="msg">Backend Apps Script perlu diintegrasikan terlebih dahulu.</p></section><div id="app" hidden><aside><div class="brand">U<span>F</span> UWAIS FOOD <small>WEBSITE CMS</small></div><nav><button data-page="dashboard">Dashboard</button><button data-page="home">Beranda</button><button data-page="products">Produk Website</button><button data-page="promos">Promo & Galeri</button><button data-page="profile">Profil Toko</button><button data-page="contact">Kontak & Sosial</button><button data-page="seo">SEO Website</button></nav><a href="https://uwaisfood.my.id" target="_blank">Lihat website ↗</a><button id="logout">Keluar</button></aside><main><header><div><small>UWAIS FOOD / CONTENT STUDIO</small><h2 id="title">Dashboard Website</h2></div><div><a href="https://uwaisfood.my.id" target="_blank">Preview</a> <button id="publish">Publikasikan</button></div></header><section id="dashboard"><h1>Website yang baik<br><em>dimulai dari cerita.</em></h1><p>Kelola konten website resmi Uwais Food.</p><div class="cards"><article>DOMAIN WEBSITE<b>uwaisfood.my.id</b></article><article>DOMAIN CMS<b>cms.uwaisfood.my.id</b></article><article>STATUS<b id="status">Draft lokal</b></article></div><p class="notice">CMS frontend sudah disiapkan. Login dan publikasi membutuhkan addon Apps Script yang disesuaikan dengan autentikasi Admin produksi.</p></section><section id="editor" hidden><h3 id="editorTitle"></h3><form id="form"></form></section></main></div><script src="assets/cms.js"></script></body></html>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050605">
+<meta name="description" content="Panel pengelolaan website resmi Uwais Food.">
+<title>Uwais Food CMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/cms.css">
+</head>
+<body>
+<section id="loginView" class="login-shell">
+  <div class="login-card">
+    <div class="brand-mark">U<span>F</span></div>
+    <div class="eyebrow">CONTENT MANAGEMENT SYSTEM</div>
+    <h1>Uwais Food <em>CMS</em></h1>
+    <p class="muted">Satu ruang untuk mengelola cerita, produk, dan tampilan website Uwais Food.</p>
+    <label for="apiUrl">URL Web App Apps Script Admin</label>
+    <input id="apiUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="url">
+    <label for="pin">PIN Admin Uwais Food</label>
+    <input id="pin" type="password" inputmode="numeric" placeholder="Masukkan PIN Admin" autocomplete="current-password">
+    <button id="loginBtn" class="btn primary full">Masuk ke CMS <span>→</span></button>
+    <p id="loginMessage" class="hint" aria-live="polite">Gunakan PIN yang sama dengan aplikasi Admin Uwais Food.</p>
+    <a href="https://uwaisfood.my.id" class="login-back">← Kembali ke website utama</a>
+  </div>
+  <div class="login-foot">UWAIS FOOD · HOMEMADE GOODNESS · TANJUNGPINANG</div>
+</section>
+
+<div id="appView" class="app-shell hidden">
+  <aside class="sidebar">
+    <a class="brand" href="#"><span class="brand-mark">U<span>F</span></span><span class="brand-text"><b>uwais food</b><small>WEBSITE CMS</small></span></a>
+    <div class="nav-caption">WORKSPACE</div>
+    <button class="nav-item active" data-page="dashboard"><span>▦</span> Dashboard</button>
+    <div class="nav-caption">KONTEN WEBSITE</div>
+    <button class="nav-item" data-page="home"><span>⌂</span> Beranda</button>
+    <button class="nav-item" data-page="products"><span>▣</span> Produk Website</button>
+    <button class="nav-item" data-page="promo"><span>✦</span> Promo & Galeri</button>
+    <button class="nav-item" data-page="profile"><span>◉</span> Profil Toko</button>
+    <button class="nav-item" data-page="contact"><span>◎</span> Kontak & Sosial</button>
+    <button class="nav-item" data-page="seo"><span>⌕</span> SEO Website</button>
+    <div class="sidebar-bottom">
+      <a href="https://uwaisfood.my.id" target="_blank" rel="noopener">↗ Lihat website</a>
+      <button id="logoutBtn" class="nav-item"><span>⇥</span> Keluar</button>
+      <small>Uwais Food CMS · v1.1</small>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">UWAIS FOOD / CONTENT STUDIO</div>
+        <h2 id="pageTitle">Dashboard Website</h2>
+      </div>
+      <div class="topbar-actions">
+        <span class="connection"><i></i><span id="connectionText">Terhubung</span></span>
+        <a class="btn ghost" href="https://uwaisfood.my.id" target="_blank" rel="noopener">Preview ↗</a>
+        <button id="publishBtn" class="btn primary">Publikasikan <span>↗</span></button>
+      </div>
+    </header>
+
+    <section id="dashboardPage" class="page">
+      <div class="welcome-card">
+        <div>
+          <div class="eyebrow">SELAMAT DATANG DI CONTENT STUDIO</div>
+          <h1>Website yang baik<br><em>dimulai dari cerita.</em></h1>
+          <p>Kelola konten website Uwais Food, simpan sebagai draft, periksa hasilnya, lalu publikasikan.</p>
+          <a class="btn light" href="https://uwaisfood.my.id" target="_blank" rel="noopener">Buka website publik <span>↗</span></a>
+        </div>
+        <div class="welcome-art"><span>✳</span><b>U</b><small>HOMEMADE<br>GOODNESS</small></div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span>DOMAIN WEBSITE</span><b>uwaisfood.my.id</b><small>Website showcase</small></article>
+        <article class="stat-card"><span>DOMAIN CMS</span><b>cms.uwaisfood.my.id</b><small>Panel pengelolaan</small></article>
+        <article class="stat-card"><span>STATUS PUBLIKASI</span><b id="publishStatus">Memuat…</b><small id="publishDate">Draf dan publikasi</small></article>
+      </div>
+
+      <section class="panel">
+        <div class="panel-heading"><div><div class="eyebrow">QUICK ACCESS</div><h3>Kelola bagian website</h3></div></div>
+        <div class="quick-grid">
+          <button data-goto="home"><span>⌂</span><b>Beranda</b><small>Headline & banner</small></button>
+          <button data-goto="products"><span>▣</span><b>Produk</b><small>Urutan & unggulan</small></button>
+          <button data-goto="promo"><span>✦</span><b>Promo & Galeri</b><small>Konten visual</small></button>
+          <button data-goto="profile"><span>◉</span><b>Profil Toko</b><small>Cerita dan lokasi</small></button>
+        </div>
+      </section>
+
+      <section class="integration-panel">
+        <div class="integration-icon">✓</div>
+        <div><b>Terhubung ke Google Apps Script Admin</b><p>Draft dan publikasi tersimpan pada Spreadsheet Uwais Food. Katalog produk tetap mengambil nama, harga, deskripsi, dan foto dari sheet Menu Admin.</p><small id="publicEndpointText">Endpoint publik website akan tersedia setelah patch CMS dipasang pada Apps Script.</small></div>
+      </section>
+    </section>
+
+    <section id="editorPage" class="page hidden">
+      <div class="editor-intro">
+        <div><div class="eyebrow">CONTENT EDITOR</div><h3 id="editorTitle">Pengaturan Beranda</h3><p id="editorDescription">Ubah konten yang akan ditampilkan pada website publik.</p></div>
+        <span class="draft-label">DRAFT</span>
+      </div>
+      <section class="panel editor-panel">
+        <form id="contentForm">
+          <div id="fieldsContainer" class="fields-grid"></div>
+          <div id="productEditor" class="hidden"></div>
+          <div class="form-footer">
+            <button type="button" id="reloadBtn" class="btn ghost">Muat ulang data</button>
+            <button type="submit" class="btn primary">Simpan draft <span>✓</span></button>
+          </div>
+        </form>
+      </section>
+      <div class="editor-note"><b>Alur perubahan website</b><p>Simpan draft terlebih dahulu. Klik Publikasikan setelah Anda yakin dengan isi dan pratinjaunya. Perubahan publik akan tersedia setelah endpoint Apps Script terpasang dan website memuat ulang konten publik terbaru.</p></div>
+    </section>
+
+    <footer>© <span id="year"></span> Uwais Food · Content Management Studio</footer>
+  </main>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="assets/cms.js"></script>
+</body>
+</html>
