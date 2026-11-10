@@ -1,42 +1,41 @@
 # Uwais Food CMS
 
-CMS khusus untuk mengelola konten website https://uwaisfood.my.id.
-Target domain: https://cms.uwaisfood.my.id
+CMS terpisah untuk mengelola website https://uwaisfood.my.id melalui https://cms.uwaisfood.my.id.
 
-## Arsitektur
-- Frontend CMS: GitHub Pages pada repository ini.
-- Backend dan autentikasi: Google Apps Script Admin Uwais Food.
-- Penyimpanan draft/publikasi: Google Spreadsheet Admin Uwais Food, sheet `WebsiteCMS`.
-- Website publik membaca hanya data yang telah dipublikasikan melalui endpoint JSONP `?websiteCmsPublic=1`.
+## Frontend tersedia
+- `index.html`: login dan workspace CMS.
+- `assets/cms.css`: tampilan Material 3 Expressive Dark AMOLED responsif.
+- `assets/cms.js`: navigasi editor, draft lokal, dan klien API Apps Script.
+- `CNAME`: custom domain `cms.uwaisfood.my.id`.
 
-CMS tidak menyimpan PIN atau token di source code. Admin login menggunakan PIN aplikasi Uwais Food; token hanya disimpan di sesi browser.
+## Aktifkan GitHub Pages
+1. Buka Settings → Pages pada repository ini.
+2. Pilih **Deploy from a branch**, branch `main`, folder `/(root)`.
+3. Pastikan custom domain `cms.uwaisfood.my.id`.
+4. Setelah DNS dan sertifikat siap, aktifkan **Enforce HTTPS**.
 
-## Instalasi GitHub Pages
-1. Buka Settings → Pages.
-2. Pilih Deploy from a branch, branch `main`, folder `/ (root)`.
-3. Simpan custom domain `cms.uwaisfood.my.id`.
-4. Pastikan file `CNAME` berisi `cms.uwaisfood.my.id`.
-5. Tunggu DNS/HTTPS tervalidasi, lalu aktifkan Enforce HTTPS.
+## Integrasi backend wajib sebelum dipakai
+Frontend menyiapkan kontrak POST JSON ke Google Apps Script Admin Uwais Food:
+- `namespace: "websiteCms"`
+- action `login` dengan `pin`
+- action `getDraft`
+- action `saveDraft` dengan `content`
+- action `publish` dengan `content`
 
-## Instalasi Apps Script
-1. Tambahkan `apps-script/WebsiteCMS_Addon.gs` sebagai file .gs baru pada project Apps Script Admin yang sama dengan Code.gs v11.3.5.
-2. Ikuti `apps-script/PATCH-DOGET-AND-DISPATCHER.txt` untuk mendaftarkan tiga API CMS dan endpoint publik. Jangan membuat doGet kedua.
-3. Deploy Web App sebagai versi baru dan pastikan akses web app tetap sesuai pengaturan Admin.
-4. Masukkan URL Web App berakhiran /exec pada halaman login CMS.
+Backend harus memvalidasi PIN memakai mekanisme autentikasi Admin yang sebenarnya, menerbitkan token sesi yang kedaluwarsa, memvalidasi token pada setiap operasi, serta menyimpan draft/publikasi ke Spreadsheet. Jangan pernah menaruh PIN atau token dalam source frontend.
+
+**Penting:** source `Code.gs` produksi tidak tersedia pada repository CMS atau website publik yang saya periksa. Karena itu addon Apps Script dan integrasi website publik belum dipasang atau diuji. Sampai backend disesuaikan dengan project Admin produksi, login, penyimpanan server, dan publikasi belum aktif. Draft lokal hanya tersimpan di browser.
 
 ## Integrasi website publik
-Tambahkan pemanggilan endpoint CMS ke website showcase sesuai panduan `website-integration/PATCH-WEBSITE.md`. CMS memublikasikan konten ke Spreadsheet; website membaca data publik saja.
+Website showcase saat ini memakai `config.js`, `assets/app.js`, dan `data/products.json`. Perlu patch tambahan agar konten CMS yang sudah dipublikasikan dibaca website publik, tanpa mengekspos data pelanggan, transaksi, PIN, atau token.
 
-## Fitur
+## Fitur antarmuka
+- Dashboard CMS.
 - Beranda: pengumuman, judul, deskripsi, banner, tombol.
-- Produk: tampil/sembunyikan, unggulan, label, urutan (detail nama/harga/foto tetap dari sheet Menu Admin).
-- Promo & galeri: konten promo dan foto.
-- Profil toko: deskripsi, lokasi, jam operasional.
-- Kontak: WhatsApp, Instagram, Google Maps.
-- SEO: title, description, Open Graph image.
-- Draft, preview, publish, status publikasi.
+- Produk Website.
+- Promo & Galeri.
+- Profil Toko.
+- Kontak & Sosial.
+- SEO Website.
+- Draft lokal, pratinjau website, dan tombol publikasi (publikasi memerlukan backend).
 
-## Keamanan
-- Endpoint publik hanya mengirim konten yang telah dipublikasikan dan field katalog publik.
-- Endpoint baca/tulis CMS di API POST membutuhkan token hasil login PIN Admin.
-- Jangan menaruh PIN, token, API key, atau data pelanggan di repository publik.
