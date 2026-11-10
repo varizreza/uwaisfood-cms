@@ -6,10 +6,15 @@
  * - auth_(token) untuk verifikasi sesi admin
  * - ss_() untuk Spreadsheet yang sama
  * - menu_() untuk membaca katalog Menu
- * - dispatcher api_() menambahkan empat aksi CMS (lihat file PATCH...)
+ * - dispatcher api_() mendaftarkan lima aksi CMS (lihat file PATCH...)
  *
  * Addon ini tidak mengubah sheet Orders, PO, Menu, Pelanggan, atau data HPP.
  */
+
+/** Wrapper API publik internal: login menggunakan mekanisme PIN Admin yang sama. */
+function cms_login(pin) {
+  return login(pin);
+}
 
 const UWAIS_CMS_SHEET = 'WebsiteCMS';
 const UWAIS_CMS_LOG_SHEET = 'WebsiteCMS_Log';
@@ -209,7 +214,7 @@ function uwaisCmsLog_(action, detail) {
   sh.appendRow([new Date(), String(action || ''), uwaisCmsText_(detail, 180, '')]);
 }
 
-function uwaisCmsCatalog_(content) {
+function uwaisCmsCatalog_(content, includeHidden) {
   var rows = menu_().getDataRange().getValues();
   var settings = {};
   var items = content && content.products && Array.isArray(content.products.items) ? content.products.items : [];
@@ -225,7 +230,7 @@ function uwaisCmsCatalog_(content) {
     if (usedIds[id]) id += '-' + i;
     usedIds[id] = true;
     var opt = settings[id] || {};
-    if (opt.active === false) continue;
+    if (opt.active === false && !includeHidden) continue;
     var rawPrice = row[1];
     var price = typeof rawPrice === 'number' ? rawPrice : Number(rawPrice);
     if (!isFinite(price)) price = Number(String(rawPrice || '').replace(/[^0-9-]/g, '')) || 0;
