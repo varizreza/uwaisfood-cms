@@ -1,41 +1,45 @@
 # Uwais Food CMS
 
-CMS terpisah untuk mengelola website https://uwaisfood.my.id melalui https://cms.uwaisfood.my.id.
+Panel khusus untuk mengelola konten website utama https://uwaisfood.my.id melalui https://cms.uwaisfood.my.id.
 
-## Frontend tersedia
-- `index.html`: login dan workspace CMS.
-- `assets/cms.css`: tampilan Material 3 Expressive Dark AMOLED responsif.
-- `assets/cms.js`: navigasi editor, draft lokal, dan klien API Apps Script.
+## File frontend
+- `index.html`: login dan workspace.
+- `assets/cms.css`: desain responsif Dark AMOLED.
+- `assets/cms.js`: editor, upload gambar, autentikasi, draft dan publikasi.
 - `CNAME`: custom domain `cms.uwaisfood.my.id`.
 
 ## Aktifkan GitHub Pages
-1. Buka Settings → Pages pada repository ini.
-2. Pilih **Deploy from a branch**, branch `main`, folder `/(root)`.
-3. Pastikan custom domain `cms.uwaisfood.my.id`.
-4. Setelah DNS dan sertifikat siap, aktifkan **Enforce HTTPS**.
+1. Buka Settings → Pages.
+2. Pilih Deploy from a branch, branch `main`, folder `/(root)`.
+3. Pastikan Custom domain adalah `cms.uwaisfood.my.id`.
+4. Aktifkan Enforce HTTPS setelah DNS dan sertifikat siap.
 
-## Integrasi backend wajib sebelum dipakai
-Frontend menyiapkan kontrak POST JSON ke Google Apps Script Admin Uwais Food:
-- `namespace: "websiteCms"`
-- action `login` dengan `pin`
-- action `getDraft`
-- action `saveDraft` dengan `content`
-- action `publish` dengan `content`
+## Backend Apps Script (harus dipasang)
+1. Tambahkan `apps-script/WebsiteCMS_Addon.gs` sebagai file .gs baru pada project Admin.
+2. Ikuti langkah persis di `apps-script/PATCH-INTEGRASI-CODEGS.md`: daftarkan lima action CMS pada dispatcher api_() dan dua parameter publik pada doGet(e).
+3. Jangan mengganti Code.gs utama.
+4. Deploy Apps Script sebagai New version dengan URL Web App /exec yang sama.
+5. Login ke CMS menggunakan URL /exec dan PIN Admin Uwais Food.
 
-Backend harus memvalidasi PIN memakai mekanisme autentikasi Admin yang sebenarnya, menerbitkan token sesi yang kedaluwarsa, memvalidasi token pada setiap operasi, serta menyimpan draft/publikasi ke Spreadsheet. Jangan pernah menaruh PIN atau token dalam source frontend.
+Addon menyimpan data pada sheet baru `WebsiteCMS` dan `WebsiteCMS_Log`. Sheet transaksi, PO, Menu, Pelanggan, dan HPP tidak diubah. Draft dan publikasi menggunakan autentikasi `auth_(token)` dari backend yang sudah ada.
 
-**Penting:** source `Code.gs` produksi tidak tersedia pada repository CMS atau website publik yang saya periksa. Karena itu addon Apps Script dan integrasi website publik belum dipasang atau diuji. Sampai backend disesuaikan dengan project Admin produksi, login, penyimpanan server, dan publikasi belum aktif. Draft lokal hanya tersimpan di browser.
+## Fitur
+- Dashboard status CMS dan publikasi.
+- Beranda: pengumuman, judul, deskripsi, gambar banner, tombol.
+- Produk: tampil/sembunyikan, unggulan, label, urutan. Nama/harga/deskripsi/foto tetap berasal dari sheet Menu.
+- Promo & galeri: teks, gambar utama, upload galeri.
+- Profil toko: cerita, lokasi, jam operasional dan kutipan.
+- Kontak: WhatsApp, Instagram, Google Maps.
+- SEO: title, description, Open Graph image.
+- Simpan draft, preview, publikasi dan catatan riwayat.
 
 ## Integrasi website publik
-Website showcase saat ini memakai `config.js`, `assets/app.js`, dan `data/products.json`. Perlu patch tambahan agar konten CMS yang sudah dipublikasikan dibaca website publik, tanpa mengekspos data pelanggan, transaksi, PIN, atau token.
+Setelah backend addon dipasang, endpoint publik adalah:
+`https://script.google.com/macros/s/ID_DEPLOYMENT/exec?websiteCmsPublic=1`
+Endpoint JSONP kompatibel dengan website showcase. URL ini hanya mengirim konten yang sudah dipublikasikan dan data katalog publik. Untuk mengaktifkannya pada website, isi `catalogUrl` di `config.js` repo website utama dengan URL endpoint di atas.
 
-## Fitur antarmuka
-- Dashboard CMS.
-- Beranda: pengumuman, judul, deskripsi, banner, tombol.
-- Produk Website.
-- Promo & Galeri.
-- Profil Toko.
-- Kontak & Sosial.
-- SEO Website.
-- Draft lokal, pratinjau website, dan tombol publikasi (publikasi memerlukan backend).
-
+## Keamanan
+- Jangan pernah memasukkan PIN, token, API key, atau data pesanan pada file publik.
+- Endpoint baca/tulis CMS memvalidasi token sesi melalui fungsi `auth_(token)`.
+- Foto CMS disimpan pada folder Drive terpisah; tautan foto dipublikasi agar dapat ditampilkan di website.
+- Jika kebijakan Google Workspace membatasi "Anyone with the link", upload foto akan ditolak oleh Apps Script.
